@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe;
+namespace pocketmine\network\mcpe\handler;
 
 use pocketmine\network\mcpe\protocol\AddBehaviorTreePacket;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
@@ -130,9 +130,17 @@ use pocketmine\network\mcpe\protocol\UpdateEquipPacket;
 use pocketmine\network\mcpe\protocol\UpdateTradePacket;
 use pocketmine\network\mcpe\protocol\WSConnectPacket;
 
-abstract class NetworkSession{
+abstract class NetworkHandler{
 
-	abstract public function handleDataPacket(DataPacket $packet);
+	/**
+	 * Handles a Minecraft: PE packet from the network session.
+	 *
+	 * @param DataPacket $packet
+	 * @return bool if the packet was handled
+	 */
+	public function handleDataPacket(DataPacket $packet) : bool{
+		return $packet->handle($this);
+	}
 
 	public function handleLogin(LoginPacket $packet) : bool{
 		return false;
@@ -553,5 +561,4 @@ abstract class NetworkSession{
 	public function handleSetDefaultGameType(SetDefaultGameTypePacket $packet) : bool{
 		return false;
 	}
-
 }

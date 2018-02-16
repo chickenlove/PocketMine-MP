@@ -26,8 +26,8 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 
+use pocketmine\network\mcpe\handler\NetworkHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
-use pocketmine\network\mcpe\NetworkSession;
 #ifndef COMPILE
 use pocketmine\utils\Binary;
 #endif
@@ -102,7 +102,7 @@ class BatchPacket extends DataPacket{
 		$this->compressionLevel = $level;
 	}
 
-	public function handle(NetworkSession $session) : bool{
+	public function handle(NetworkHandler $handler) : bool{
 		if($this->payload === ""){
 			return false;
 		}
@@ -114,7 +114,8 @@ class BatchPacket extends DataPacket{
 				throw new \InvalidArgumentException("Received invalid " . get_class($pk) . " inside BatchPacket");
 			}
 
-			$session->handleDataPacket($pk);
+			$pk->decode(); //need to decode here because the handler won't do it
+			$handler->handleDataPacket($pk);
 		}
 
 		return true;

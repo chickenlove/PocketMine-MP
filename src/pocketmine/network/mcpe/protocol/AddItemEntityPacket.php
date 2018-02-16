@@ -27,7 +27,8 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\handler\NetworkHandler;
+
 
 class AddItemEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ITEM_ENTITY_PACKET;
@@ -63,8 +64,8 @@ class AddItemEntityPacket extends DataPacket{
 		$this->putEntityMetadata($this->metadata);
 	}
 
-	public function handle(NetworkSession $session) : bool{
-		return $session->handleAddItemEntity($this);
+	public function handle(NetworkHandler $handler) : bool{
+		return $handler->handleAddItemEntity($this);
 	}
 
 }

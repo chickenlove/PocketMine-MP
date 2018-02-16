@@ -26,7 +26,8 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 
-use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\handler\NetworkHandler;
+
 
 class SetHealthPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_HEALTH_PACKET;
@@ -42,8 +43,8 @@ class SetHealthPacket extends DataPacket{
 		$this->putVarInt($this->health);
 	}
 
-	public function handle(NetworkSession $session) : bool{
-		return $session->handleSetHealth($this);
+	public function handle(NetworkHandler $handler) : bool{
+		return $handler->handleSetHealth($this);
 	}
 
 }

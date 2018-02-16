@@ -27,7 +27,8 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 
-use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\handler\NetworkHandler;
+
 
 class SetTitlePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_TITLE_PACKET;
@@ -66,7 +67,7 @@ class SetTitlePacket extends DataPacket{
 		$this->putVarInt($this->fadeOutTime);
 	}
 
-	public function handle(NetworkSession $session) : bool{
-		return $session->handleSetTitle($this);
+	public function handle(NetworkHandler $handler) : bool{
+		return $handler->handleSetTitle($this);
 	}
 }

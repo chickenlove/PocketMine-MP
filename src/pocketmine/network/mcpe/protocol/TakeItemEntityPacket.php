@@ -26,7 +26,8 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 
-use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\handler\NetworkHandler;
+
 
 class TakeItemEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::TAKE_ITEM_ENTITY_PACKET;
@@ -45,7 +46,7 @@ class TakeItemEntityPacket extends DataPacket{
 		$this->putEntityRuntimeId($this->eid);
 	}
 
-	public function handle(NetworkSession $session) : bool{
-		return $session->handleTakeItemEntity($this);
+	public function handle(NetworkHandler $handler) : bool{
+		return $handler->handleTakeItemEntity($this);
 	}
 }
