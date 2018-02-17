@@ -32,7 +32,7 @@ use pocketmine\network\mcpe\protocol\DataPacket;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class PlayerNetworkSessionAdapter{
+class PlayerNetworkSession{
 
 	/** @var Server */
 	private $server;

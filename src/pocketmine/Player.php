@@ -95,7 +95,7 @@ use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\ListTag;
-use pocketmine\network\mcpe\PlayerNetworkSessionAdapter;
+use pocketmine\network\mcpe\PlayerNetworkSession;
 use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
@@ -186,11 +186,8 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 	/** @var SourceInterface */
 	protected $interface;
 
-	/**
-	 * @var PlayerNetworkSessionAdapter
-	 * TODO: remove this once player and network are divorced properly
-	 */
-	protected $sessionAdapter;
+	/** @var PlayerNetworkSession */
+	protected $networkSession;
 
 	/** @var int */
 	protected $protocol = -1;
@@ -698,14 +695,14 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 
 		$this->allowMovementCheats = (bool) $this->server->getProperty("player.anti-cheat.allow-movement-cheats", false);
 
-		$this->sessionAdapter = new PlayerNetworkSessionAdapter($this->server, $this);
+		$this->networkSession = new PlayerNetworkSession($this->server, $this);
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isConnected() : bool{
-		return $this->sessionAdapter !== null;
+		return $this->networkSession !== null;
 	}
 
 	/**
@@ -2936,8 +2933,8 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 	 * @param DataPacket $packet
 	 */
 	public function handleDataPacket(DataPacket $packet){
-		if($this->sessionAdapter !== null){
-			$this->sessionAdapter->handleDataPacket($packet);
+		if($this->networkSession !== null){
+			$this->networkSession->handleDataPacket($packet);
 		}
 	}
 
@@ -3254,7 +3251,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 					$this->directDataPacket($pk);
 				}
 
-				$this->sessionAdapter = null;
+				$this->networkSession = null;
 
 				$this->server->getPluginManager()->unsubscribeFromPermission(Server::BROADCAST_CHANNEL_USERS, $this);
 				$this->server->getPluginManager()->unsubscribeFromPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE, $this);
