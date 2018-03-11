@@ -30,9 +30,6 @@ use pocketmine\plugin\RegisteredListener;
 use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 
-/**
- * @noHandle
- */
 abstract class Event{
 
 	/** @var string|null */
@@ -87,14 +84,6 @@ abstract class Event{
 
 		/** @var Event $this */
 		$this->isCancelled = $value;
-	}
-
-	/**
-	 * @deprecated
-	 * @return HandlerList|null
-	 */
-	public function getHandlers() : ?HandlerList{
-		return HandlerList::getHandlerListFor(get_class($this));
 	}
 
 	/**

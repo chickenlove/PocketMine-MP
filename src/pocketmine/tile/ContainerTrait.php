@@ -25,7 +25,6 @@ namespace pocketmine\tile;
 
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -47,6 +46,7 @@ trait ContainerTrait{
 			$inventoryTag = $this->getNBT()->getListTag(Container::TAG_ITEMS);
 
 			$inventory = $this->getRealInventory();
+			/** @var CompoundTag $itemNBT */
 			foreach($inventoryTag as $itemNBT){
 				$inventory->setItem($itemNBT->getByte("Slot"), Item::nbtDeserialize($itemNBT));
 			}

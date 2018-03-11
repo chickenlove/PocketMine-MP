@@ -376,6 +376,10 @@ class PluginManager{
 				if($pluginNumbers[1] > $serverNumbers[1]){ //If the plugin requires new API features, being backwards compatible
 					continue;
 				}
+
+				if($pluginNumbers[2] > $serverNumbers[2]){ //If the plugin requires bug fixes in patches, being backwards compatible
+					continue;
+				}
 			}
 
 			return true;
@@ -819,7 +823,7 @@ class PluginManager{
 	private function getEventListeners(string $event) : HandlerList{
 		$list = HandlerList::getHandlerListFor($event);
 		if($list === null){
-			throw new PluginException($event . " cannot be handled because it declares the @noHandle tag");
+			throw new PluginException($event . " cannot be handled because it is abstract but does not declare the @allowHandle tag");
 		}
 		return $list;
 	}
