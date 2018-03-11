@@ -2676,7 +2676,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 				$target = $this->level->getBlock($pos);
 
 				$ev = new PlayerInteractEvent($this, $this->inventory->getItemInHand(), $target, null, $packet->face, $target->getId() === 0 ? PlayerInteractEvent::LEFT_CLICK_AIR : PlayerInteractEvent::LEFT_CLICK_BLOCK);
-				if($this->level->checkSpawnProtection($this, $target)){
+				if($this->level->isProtected($this, $target)){
 					$ev->setCancelled();
 				}
 
@@ -2917,7 +2917,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		$tile = $this->level->getTileAt($packet->x, $packet->y, $packet->z);
 		if($tile instanceof ItemFrame){
 			$ev = new PlayerInteractEvent($this, $this->inventory->getItemInHand(), $tile->getBlock(), null, 5 - $tile->getBlock()->getDamage(), PlayerInteractEvent::LEFT_CLICK_BLOCK);
-			if($this->isSpectator() or $this->level->checkSpawnProtection($this, $tile)){
+			if($this->isSpectator() or $this->level->isProtected($this, $tile)){
 				$ev->setCancelled();
 			}
 

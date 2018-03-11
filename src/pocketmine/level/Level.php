@@ -259,7 +259,8 @@ class Level implements ChunkManager, Metadatable{
 	/** @var bool */
 	private $closed = false;
 
-
+	/** @var ProtectedZone[] */
+	private $protectedZones = [];
 
 	public static function chunkHash(int $x, int $z){
 		return (($x & 0xFFFFFFFF) << 32) | ($z & 0xFFFFFFFF);
@@ -386,6 +387,8 @@ class Level implements ChunkManager, Metadatable{
 		$this->temporalPosition = new Position(0, 0, 0, $this);
 		$this->temporalVector = new Vector3(0, 0, 0);
 		$this->tickRate = 1;
+
+		$this->protectedZones[] = new SpawnProtectionZone($this);
 	}
 
 	public function getTickRate() : int{
@@ -1690,13 +1693,9 @@ class Level implements ChunkManager, Metadatable{
 	 *
 	 * @return bool true if spawn protection cancelled the action, false if not.
 	 */
-	public function checkSpawnProtection(Player $player, Vector3 $vector) : bool{
-		if(!$player->hasPermission("pocketmine.spawnprotect.bypass") and ($distance = $this->server->getSpawnRadius()) > -1){
-			$t = new Vector2($vector->x, $vector->z);
-
-			$spawnLocation = $this->getSpawnLocation();
-			$s = new Vector2($spawnLocation->x, $spawnLocation->z);
-			if(count($this->server->getOps()->getAll()) > 0 and $t->distance($s) <= $distance){
+	public function isProtected(Player $player, Vector3 $vector) : bool{
+		foreach($this->protectedZones as $zone){
+			if($zone->isProtected($player, $vector)){
 				return true;
 			}
 		}
@@ -1730,7 +1729,7 @@ class Level implements ChunkManager, Metadatable{
 
 			if(($player->isSurvival() and !$target->isBreakable($item)) or $player->isSpectator()){
 				$ev->setCancelled();
-			}elseif($this->checkSpawnProtection($player, $target)){
+			}elseif($this->isProtected($player, $target)){
 				$ev->setCancelled(); //set it to cancelled so plugins can bypass this
 			}
 
@@ -1838,7 +1837,7 @@ class Level implements ChunkManager, Metadatable{
 
 		if($player !== null){
 			$ev = new PlayerInteractEvent($player, $item, $blockClicked, $clickVector, $face, $blockClicked->getId() === 0 ? PlayerInteractEvent::RIGHT_CLICK_AIR : PlayerInteractEvent::RIGHT_CLICK_BLOCK);
-			if($this->checkSpawnProtection($player, $blockClicked)){
+			if($this->isProtected($player, $blockClicked)){
 				$ev->setCancelled(); //set it to cancelled so plugins can bypass this
 			}
 
@@ -1893,7 +1892,7 @@ class Level implements ChunkManager, Metadatable{
 
 		if($player !== null){
 			$ev = new BlockPlaceEvent($player, $hand, $blockReplace, $blockClicked, $item);
-			if($this->checkSpawnProtection($player, $blockClicked)){
+			if($this->isProtected($player, $blockClicked)){
 				$ev->setCancelled();
 			}
 
