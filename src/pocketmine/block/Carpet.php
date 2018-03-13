@@ -85,4 +85,11 @@ class Carpet extends Flowable{
 		return false;
 	}
 
+	public function getFlameEncouragement() : int{
+		return 30;
+	}
+
+	public function getFlammability() : int{
+		return 20;
+	}
 }

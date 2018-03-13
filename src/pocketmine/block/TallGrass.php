@@ -96,4 +96,11 @@ class TallGrass extends Flowable{
 		return [];
 	}
 
+	public function getFlameEncouragement() : int{
+		return 60;
+	}
+
+	public function getFlammability() : int{
+		return 100;
+	}
 }
