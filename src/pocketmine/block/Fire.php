@@ -95,7 +95,7 @@ class Fire extends Flowable{
 
 			return Level::BLOCK_UPDATE_NORMAL;
 		}elseif($type === Level::BLOCK_UPDATE_RANDOM){
-			if($this->getSide(Vector3::SIDE_DOWN)->getId() !== self::NETHERRACK){
+			if(!$this->getSide(Vector3::SIDE_DOWN)->burnsForever()){
 				if(mt_rand(0, 2) === 0){
 					if($this->meta === 0x0F){
 						$this->level->setBlock($this, BlockFactory::get(Block::AIR));
